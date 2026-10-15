@@ -38,9 +38,17 @@ macOS lie l'accès complet au disque à la signature de l'app. `scripts/setup-si
 - **Ne le publiez jamais** : il contient la clé privée.
 - Sans ce certificat, `build-app.sh` signe « ad hoc » et l'accès est perdu à chaque recompilation.
 
+## Publier une version
+
+```bash
+UNIVERSAL=1 scripts/make-dmg.sh
+```
+
+Produit `build/SweepIt-<version>.dmg` (Apple Silicon + Intel, signé) et son empreinte SHA-256. La version vient de `CFBundleShortVersionString` dans `Resources/Info.plist`. Les versions publiées sont sur la page [Releases](https://github.com/antoinealbaut23/SweepIt/releases).
+
 ## Partager avec des amis
 
-Envoyez `build/SweepIt.zip`. L'app est signée avec un certificat personnel (pas un compte développeur Apple), donc au premier lancement macOS la bloque :
+Envoyez le DMG (ou le lien de la page Releases). L'app est signée avec un certificat personnel (pas un compte développeur Apple), donc au premier lancement macOS la bloque :
 
 1. Double-cliquez sur SweepIt → message d'avertissement → **OK**.
 2. **Réglages Système → Confidentialité et sécurité** → en bas, **Ouvrir quand même**.

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Construit build/SweepIt.app (signature ad hoc) et build/SweepIt.zip à partager.
 # Usage : scripts/build-app.sh            → architecture de la machine
-#         UNIVERSAL=1 scripts/build-app.sh → Apple Silicon + Intel (nécessite Xcode)
+#         UNIVERSAL=1 scripts/build-app.sh → Apple Silicon + Intel
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
