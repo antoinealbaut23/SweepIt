@@ -87,13 +87,15 @@ struct ScanningView: View {
 
 extension View {
     func trashReportAlert(_ report: Binding<TrashReport?>) -> some View {
-        alert("Terminé",
+        alert(report.wrappedValue?.title ?? "Terminé",
               isPresented: Binding(get: { report.wrappedValue != nil },
                                    set: { if !$0 { report.wrappedValue = nil } }),
-              presenting: report.wrappedValue) { _ in
+              presenting: report.wrappedValue) { r in
             Button("OK") {}
-            Button("Ouvrir la corbeille") {
-                NSWorkspace.shared.open(Safety.home.appendingPathComponent(".Trash"))
+            if r.moved > 0 {
+                Button("Vider la corbeille…") {
+                    NotificationCenter.default.post(name: TrashBin.emptyRequest, object: nil)
+                }
             }
         } message: { r in
             Text(r.message)
@@ -103,14 +105,19 @@ extension View {
 }
 
 extension TrashReport {
+    var title: String { moved == 0 && !failures.isEmpty ? "Rien n'a pu être supprimé" : "Terminé" }
+
     var message: String {
         let r = self
+        guard r.moved > 0 else { return failureDetails }
         var msg = "\(r.moved) élément\(r.moved > 1 ? "s" : "") placé\(r.moved > 1 ? "s" : "") dans la corbeille (\(Fmt.bytes(r.freed))). Videz la corbeille pour libérer réellement l'espace."
-        if !r.failures.isEmpty {
-            msg += "\n\n\(r.failures.count) échec\(r.failures.count > 1 ? "s" : "") :\n"
-            msg += r.failures.prefix(5).joined(separator: "\n")
-            if r.failures.count > 5 { msg += "\n…" }
-        }
+        if !r.failures.isEmpty { msg += "\n\n" + failureDetails }
+        return msg
+    }
+
+    private var failureDetails: String {
+        var msg = "\(failures.count) échec\(failures.count > 1 ? "s" : "") :\n" + failures.prefix(5).joined(separator: "\n")
+        if failures.count > 5 { msg += "\n…" }
         return msg
     }
 }

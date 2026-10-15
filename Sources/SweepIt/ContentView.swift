@@ -62,6 +62,8 @@ struct ContentView: View {
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 8) {
                     if !hasFDA { fdaBanner }
+                    TrashWidget()
+                    Divider()
                     Button { guideStep = GuideRequest(step: 0) } label: {
                         Label("Guide de démarrage", systemImage: "questionmark.circle")
                             .frame(maxWidth: .infinity, alignment: .leading)

@@ -15,9 +15,14 @@ struct FileEntry: Identifiable, Hashable {
 }
 
 enum Fmt {
-    static func bytes(_ b: Int64) -> String {
-        ByteCountFormatter.string(fromByteCount: b, countStyle: .file)
-    }
+    private static let byteFormatter: ByteCountFormatter = {
+        let f = ByteCountFormatter()
+        f.countStyle = .file
+        f.allowsNonnumericFormatting = false   // « 0 octet » plutôt que « Zéro ko »
+        return f
+    }()
+
+    static func bytes(_ b: Int64) -> String { byteFormatter.string(fromByteCount: b) }
 
     static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -103,6 +108,18 @@ enum Trash {
                 try FS.fm.trashItem(at: url, resultingItemURL: nil)
                 r.moved += 1
                 r.freed += size
+            } catch let error as NSError where error.code == NSFileWriteNoPermissionError {
+                // Élément protégé (par exemple une app installée par un .pkg) : le Finder
+                // s'en charge et affiche lui-même la demande de mot de passe administrateur.
+                let finderError = Finder.trash(url)
+                if finderError == nil {
+                    r.moved += 1
+                    r.freed += size
+                } else if finderError == "annulé" {
+                    r.failures.append("\(url.lastPathComponent) : mot de passe non saisi, rien n'a été supprimé")
+                } else {
+                    r.failures.append("\(url.lastPathComponent) : \(finderError ?? "")")
+                }
             } catch {
                 r.failures.append("\(url.lastPathComponent) : \(error.localizedDescription)")
             }
