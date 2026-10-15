@@ -164,7 +164,7 @@ private struct StatCard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
+        .glassCard()
     }
 }
 
@@ -180,29 +180,31 @@ struct MonitorView: View {
             Divider()
             HelpCard(module: .monitor)
             ScrollView {
-                VStack(spacing: 20) {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 180), spacing: 16)], spacing: 16) {
-                        StatCard(title: "Processeur", value: m.cpu, main: "\(Int(m.cpu * 100)) %",
-                                 detail: "\(ProcessInfo.processInfo.activeProcessorCount) cœurs", color: .blue,
-                                 hint: "L'effort de réflexion de votre Mac en ce moment.")
-                        StatCard(title: "Mémoire", value: m.memFraction, main: "\(Int(m.memFraction * 100)) %",
-                                 detail: "\(gib(m.memUsed)) / \(gib(m.memTotal))", color: .purple,
-                                 hint: "L'espace de travail des apps ouvertes.")
-                        StatCard(title: "Disque", value: m.diskFraction, main: "\(Int(m.diskFraction * 100)) %",
-                                 detail: "\(Fmt.bytes(m.diskFree)) libres", color: .orange,
-                                 hint: "Le rangement de vos fichiers.")
-                        if let b = m.battery {
-                            StatCard(title: "Batterie", value: Double(b.percent) / 100, main: "\(b.percent) %",
-                                     detail: b.charging ? "En charge" : (b.onAC ? "Sur secteur" : "Sur batterie"),
-                                     color: .green)
+                GlassGroup {
+                    VStack(spacing: 20) {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 180), spacing: 16)], spacing: 16) {
+                            StatCard(title: "Processeur", value: m.cpu, main: "\(Int(m.cpu * 100)) %",
+                                     detail: "\(ProcessInfo.processInfo.activeProcessorCount) cœurs", color: .blue,
+                                     hint: "L'effort de réflexion de votre Mac en ce moment.")
+                            StatCard(title: "Mémoire", value: m.memFraction, main: "\(Int(m.memFraction * 100)) %",
+                                     detail: "\(gib(m.memUsed)) / \(gib(m.memTotal))", color: .purple,
+                                     hint: "L'espace de travail des apps ouvertes.")
+                            StatCard(title: "Disque", value: m.diskFraction, main: "\(Int(m.diskFraction * 100)) %",
+                                     detail: "\(Fmt.bytes(m.diskFree)) libres", color: .orange,
+                                     hint: "Le rangement de vos fichiers.")
+                            if let b = m.battery {
+                                StatCard(title: "Batterie", value: Double(b.percent) / 100, main: "\(b.percent) %",
+                                         detail: b.charging ? "En charge" : (b.onAC ? "Sur secteur" : "Sur batterie"),
+                                         color: .green)
+                            }
                         }
-                    }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Processeur — 2 dernières minutes").font(.headline)
-                        Sparkline(values: m.cpuHistory, color: .blue)
-                            .frame(height: 80)
-                            .padding(12)
-                            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Processeur — 2 dernières minutes").font(.headline)
+                            Sparkline(values: m.cpuHistory, color: .blue)
+                                .frame(height: 80)
+                                .padding(12)
+                                .glassCard(cornerRadius: GlassMetrics.smallRadius)
+                        }
                     }
                 }
                 .padding(20)

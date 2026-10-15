@@ -2,6 +2,8 @@
 
 Utilitaire de nettoyage pour macOS, natif (Swift + SwiftUI), dans l'esprit de CleanMyMac.
 
+Design : langage « Liquid Glass » de macOS 26 (cartes, barres d'action et boutons en verre, voir `Sources/SweepIt/Core/Glass.swift`), avec un repli sur les matériaux classiques de macOS 14 à 25.
+
 | Module | Rôle |
 |---|---|
 | Nettoyage | Caches des apps, journaux, caches des navigateurs, Xcode (DerivedData, DeviceSupport), npm/Gradle/Cargo |

@@ -152,7 +152,7 @@ struct HelpCard: View {
                     }
                 }
                 .padding(14)
-                .background(.tint.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+                .glassCard(tint: .accentColor)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
             }
