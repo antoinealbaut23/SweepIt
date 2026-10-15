@@ -164,16 +164,18 @@ struct BatteryView: View {
                 ScanningView(text: "Lecture de la batterie…")
             } else if let r = report {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        HStack(spacing: 16) {
-                            chargeCard(r)
-                            healthCard(r)
-                            cyclesCard(r)
-                        }
-                        details(r)
-                        Text("Recommandations").font(.title3.bold())
-                        VStack(spacing: 10) {
-                            ForEach(r.tips) { tipRow($0) }
+                    GlassGroup {
+                        VStack(alignment: .leading, spacing: 20) {
+                            HStack(spacing: 16) {
+                                chargeCard(r)
+                                healthCard(r)
+                                cyclesCard(r)
+                            }
+                            details(r)
+                            Text("Recommandations").font(.title3.bold())
+                            VStack(spacing: 10) {
+                                ForEach(r.tips) { tipRow($0) }
+                            }
                         }
                     }
                     .padding(20)
@@ -231,7 +233,7 @@ struct BatteryView: View {
             Spacer()
         }
         .padding(14)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 12))
+        .glassCard(cornerRadius: GlassMetrics.smallRadius)
     }
 
     private func detailItem(_ icon: String, _ title: String, _ value: String) -> some View {
@@ -258,7 +260,7 @@ struct BatteryView: View {
             Spacer(minLength: 0)
         }
         .padding(12)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 10))
+        .glassCard(cornerRadius: GlassMetrics.smallRadius)
     }
 }
 
@@ -285,6 +287,6 @@ private struct BatteryCard: View {
         }
         .padding(18)
         .frame(maxWidth: .infinity)
-        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
+        .glassCard()
     }
 }

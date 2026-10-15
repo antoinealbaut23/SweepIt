@@ -115,7 +115,7 @@ struct ContentView: View {
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+        .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: GlassMetrics.smallRadius, style: .continuous))
     }
 }
 

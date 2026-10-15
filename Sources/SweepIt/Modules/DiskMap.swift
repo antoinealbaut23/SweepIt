@@ -171,7 +171,7 @@ struct DiskMapView: View {
                     Text("Affichez la carte de votre dossier personnel pour le découvrir.")
                 } actions: {
                     Button("Afficher la carte") { model.start(Safety.home) }
-                        .buttonStyle(.borderedProminent).controlSize(.large)
+                        .glassButtonStyle(prominent: true).controlSize(.large)
                 }
             } else {
                 breadcrumb
@@ -294,24 +294,25 @@ struct DiskMapView: View {
 
     private var footer: some View {
         HStack {
-            if let h = model.hovered {
-                Text(h.name).bold()
-                Text(Fmt.bytes(h.size))
-                if model.total > 0 {
-                    Text(String(format: "%.1f %%", Double(h.size) / Double(model.total) * 100)).foregroundStyle(.secondary)
-                }
-            } else {
-                Text("Total : \(Fmt.bytes(model.total)) · \(model.nodes.count) éléments")
-                    .foregroundStyle(.secondary)
-                if model.nodes.count > DiskMapModel.maxTiles {
-                    Text("(\(DiskMapModel.maxTiles) plus gros affichés)").foregroundStyle(.tertiary)
+            HStack {
+                if let h = model.hovered {
+                    Text(h.name).bold()
+                    Text(Fmt.bytes(h.size))
+                    if model.total > 0 {
+                        Text(String(format: "%.1f %%", Double(h.size) / Double(model.total) * 100)).foregroundStyle(.secondary)
+                    }
+                } else {
+                    Text("Total : \(Fmt.bytes(model.total)) · \(model.nodes.count) éléments")
+                        .foregroundStyle(.secondary)
+                    if model.nodes.count > DiskMapModel.maxTiles {
+                        Text("(\(DiskMapModel.maxTiles) plus gros affichés)").foregroundStyle(.tertiary)
+                    }
                 }
             }
+            .glassCapsule()
             Spacer()
         }
         .monospacedDigit()
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
-        .background(.bar)
+        .glassBottomBar()
     }
 }

@@ -328,7 +328,7 @@ struct DesktopView: View {
                     Text("SweepIt va trier vos fichiers par type. Vous choisirez ensuite quoi ranger, garder ou jeter.")
                 } actions: {
                     Button("Analyser mon Bureau") { model.scan() }
-                        .buttonStyle(.borderedProminent).controlSize(.large)
+                        .glassButtonStyle(prominent: true).controlSize(.large)
                 }
             } else if model.items.isEmpty {
                 ContentUnavailableView("Votre Bureau est déjà rangé !", systemImage: "checkmark.seal",
@@ -348,8 +348,10 @@ struct DesktopView: View {
                 Divider()
 
                 ScrollView {
-                    LazyVStack(spacing: 12) {
-                        ForEach(model.categories) { CategoryCard(model: model, category: $0) }
+                    GlassGroup {
+                        LazyVStack(spacing: 12) {
+                            ForEach(model.categories) { CategoryCard(model: model, category: $0) }
+                        }
                     }
                     .padding(20)
                 }
@@ -367,17 +369,18 @@ struct DesktopView: View {
 
     private var bottomBar: some View {
         let toMove = model.count(.organize), toTrash = model.count(.trash)
-        return HStack {
-            Text(summary(toMove, toTrash)).foregroundStyle(.secondary)
-            Spacer()
-            Button { confirm = true } label: { Label("Ranger mon Bureau", systemImage: "sparkles") }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .disabled(toMove + toTrash == 0)
+        return GlassGroup {
+            HStack {
+                Text(summary(toMove, toTrash)).foregroundStyle(.secondary)
+                    .glassCapsule()
+                Spacer()
+                Button { confirm = true } label: { Label("Ranger mon Bureau", systemImage: "sparkles") }
+                    .glassButtonStyle(prominent: true)
+                    .controlSize(.large)
+                    .disabled(toMove + toTrash == 0)
+            }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .background(.bar)
+        .glassBottomBar()
         .confirmationDialog("Ranger votre Bureau ?", isPresented: $confirm) {
             Button("Ranger") { model.apply() }
         } message: {
@@ -407,7 +410,7 @@ private struct CategoryCard: View {
                     .font(.title3)
                     .foregroundStyle(.white)
                     .frame(width: 38, height: 38)
-                    .background(category.color.gradient, in: RoundedRectangle(cornerRadius: 9))
+                    .background(category.color.gradient, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text(category.title).font(.headline)
@@ -470,7 +473,7 @@ private struct CategoryCard: View {
             }
         }
         .padding(14)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 12))
+        .glassCard()
         .opacity(action == .keep ? 0.6 : 1)
     }
 }

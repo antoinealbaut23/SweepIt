@@ -168,7 +168,7 @@ struct CleanerView: View {
                     Text("SweepIt va chercher les fichiers inutiles. Rien ne sera supprimé avant que vous ne validiez.")
                 } actions: {
                     Button("Lancer l'analyse") { model.scan() }
-                        .buttonStyle(.borderedProminent).controlSize(.large)
+                        .glassButtonStyle(prominent: true).controlSize(.large)
                 }
             } else if model.categories.isEmpty {
                 ContentUnavailableView("Tout est propre !", systemImage: "checkmark.seal",

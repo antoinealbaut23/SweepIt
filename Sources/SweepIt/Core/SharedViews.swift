@@ -9,15 +9,19 @@ struct ModuleHeader<Actions: View>: View {
     var body: some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 26, weight: .semibold))
+                .font(.system(size: 22, weight: .semibold))
                 .foregroundStyle(.tint)
-                .frame(width: 40)
+                .frame(width: 46, height: 46)
+                .glassCircle(tint: .accentColor)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.title2.bold())
                 Text(subtitle).foregroundStyle(.secondary)
             }
             Spacer()
-            actions
+            GlassGroup {
+                HStack(spacing: 8) { actions }
+                    .glassButtonStyle()
+            }
         }
         .padding(20)
     }
@@ -32,21 +36,22 @@ struct TrashBar: View {
     @State private var confirm = false
 
     var body: some View {
-        HStack {
-            Text("\(count) élément\(count > 1 ? "s" : "") sélectionné\(count > 1 ? "s" : "") · \(Fmt.bytes(size))")
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
-            Spacer()
-            Button(role: .destructive) { confirm = true } label: {
-                Label(label, systemImage: "trash")
+        GlassGroup {
+            HStack {
+                Text("\(count) élément\(count > 1 ? "s" : "") sélectionné\(count > 1 ? "s" : "") · \(Fmt.bytes(size))")
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+                    .glassCapsule()
+                Spacer()
+                Button(role: .destructive) { confirm = true } label: {
+                    Label(label, systemImage: "trash")
+                }
+                .controlSize(.large)
+                .glassButtonStyle(prominent: true)
+                .disabled(count == 0)
             }
-            .controlSize(.large)
-            .buttonStyle(.borderedProminent)
-            .disabled(count == 0)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .background(.bar)
+        .glassBottomBar()
         .confirmationDialog("Mettre \(count) élément\(count > 1 ? "s" : "") à la corbeille ?",
                             isPresented: $confirm) {
             Button(label, role: .destructive, action: action)

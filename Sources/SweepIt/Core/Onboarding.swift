@@ -55,7 +55,7 @@ struct OnboardingView: View {
             Image(systemName: "key.fill")
                 .font(.system(size: 52)).foregroundStyle(.orange)
                 .frame(width: 100, height: 100)
-                .background(.orange.opacity(0.12), in: Circle())
+                .glassCircle(tint: .orange)
             Text("Une autorisation à donner").font(.title.bold())
             Text("Imaginez un agent d'entretien : pour nettoyer toute la maison, il a besoin des clés de chaque pièce.\n\nC'est pareil ici : macOS protège certains dossiers. Pour les voir et les nettoyer, SweepIt a besoin de l'**accès complet au disque**.")
                 .multilineTextAlignment(.center)
@@ -67,7 +67,7 @@ struct OnboardingView: View {
             }
             .foregroundStyle(.secondary)
             .padding(14)
-            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+            .glassCard(cornerRadius: GlassMetrics.smallRadius)
         }
     }
 
@@ -79,7 +79,7 @@ struct OnboardingView: View {
                 Button { Permissions.openFullDiskAccessSettings() } label: {
                     Label("Ouvrir les Réglages", systemImage: "gearshape")
                 }
-                .buttonStyle(.borderedProminent)
+                .glassButtonStyle(prominent: true)
             }
 
             stepRow(2, "Activez l'interrupteur à côté de SweepIt") {
@@ -123,28 +123,30 @@ struct OnboardingView: View {
     // MARK: Éléments
 
     private var footer: some View {
-        HStack {
-            if step > 0 && step < lastStep {
-                Button("Plus tard") { finish() }.buttonStyle(.link)
-            }
-            Spacer()
-            HStack(spacing: 6) {
-                ForEach(0...lastStep, id: \.self) { i in
-                    Circle().fill(i == step ? Color.accentColor : Color.secondary.opacity(0.3))
-                        .frame(width: 7, height: 7)
+        GlassGroup {
+            HStack {
+                if step > 0 && step < lastStep {
+                    Button("Plus tard") { finish() }.buttonStyle(.link)
                 }
+                Spacer()
+                HStack(spacing: 6) {
+                    ForEach(0...lastStep, id: \.self) { i in
+                        Circle().fill(i == step ? Color.accentColor : Color.secondary.opacity(0.3))
+                            .frame(width: 7, height: 7)
+                    }
+                }
+                Spacer()
+                if step > 0 && step < lastStep {
+                    Button("Retour") { go(step - 1) }
+                        .glassButtonStyle()
+                }
+                Button(nextLabel) { next() }
+                    .glassButtonStyle(prominent: true)
+                    .keyboardShortcut(.defaultAction)
             }
-            Spacer()
-            if step > 0 && step < lastStep {
-                Button("Retour") { go(step - 1) }
-            }
-            Button(nextLabel) { next() }
-                .buttonStyle(.borderedProminent)
-                .keyboardShortcut(.defaultAction)
         }
         .controlSize(.large)
-        .padding(20)
-        .background(.bar)
+        .glassBottomBar()
     }
 
     private var nextLabel: String {
@@ -185,7 +187,7 @@ struct OnboardingView: View {
             Spacer()
         }
         .padding(12)
-        .background((granted ? Color.green : Color.orange).opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+        .glassCard(cornerRadius: GlassMetrics.smallRadius, tint: granted ? .green : .orange)
     }
 
     private func bullet(_ icon: String, _ color: Color, _ title: String, _ text: String) -> some View {
@@ -200,7 +202,7 @@ struct OnboardingView: View {
             Text("\(n)")
                 .font(.headline).foregroundStyle(.white)
                 .frame(width: 28, height: 28)
-                .background(Color.accentColor, in: Circle())
+                .glassCircle(tint: .accentColor, strong: true)
             VStack(alignment: .leading, spacing: 8) {
                 Text(title).font(.headline)
                 content()
