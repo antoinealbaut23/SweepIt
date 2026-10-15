@@ -89,6 +89,7 @@ struct ContentView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background { WindowGlassBackground().ignoresSafeArea() }
             // Sans largeur minimale, SwiftUI calcule la hauteur minimale du contenu sur une colonne
             // très étroite : les textes s'empilent et la fenêtre déborde (contenu hors écran).
             .navigationSplitViewColumnWidth(min: 640, ideal: 860)

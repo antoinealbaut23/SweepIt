@@ -159,7 +159,9 @@ private struct StatCard: View {
             Text(title).font(.headline)
             Text(detail).font(.caption).foregroundStyle(.secondary).monospacedDigit()
             if !hint.isEmpty {
+                // Deux lignes réservées : toutes les cartes gardent la même hauteur.
                 Text(hint).font(.caption2).foregroundStyle(.tertiary).multilineTextAlignment(.center)
+                    .lineLimit(2, reservesSpace: true)
             }
         }
         .padding(20)
@@ -195,7 +197,8 @@ struct MonitorView: View {
                             if let b = m.battery {
                                 StatCard(title: "Batterie", value: Double(b.percent) / 100, main: "\(b.percent) %",
                                          detail: b.charging ? "En charge" : (b.onAC ? "Sur secteur" : "Sur batterie"),
-                                         color: .green)
+                                         color: .green,
+                                         hint: "La réserve d'énergie de votre Mac.")
                             }
                         }
                         VStack(alignment: .leading, spacing: 8) {

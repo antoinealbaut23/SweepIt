@@ -74,6 +74,30 @@ extension View {
     }
 }
 
+/// Fond de fenêtre en verre givré blanc : laisse deviner le bureau derrière la fenêtre.
+/// `NSVisualEffectView` en mode « derrière la fenêtre » fonctionne de macOS 14 à 26 ;
+/// le voile blanc donne la teinte claire (l'app est forcée en apparence claire).
+struct WindowGlassBackground: NSViewRepresentable {
+    var whiteness: Double = 0.45
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .underWindowBackground
+        view.blendingMode = .behindWindow
+        view.state = .active
+        let veil = NSView()
+        veil.wantsLayer = true
+        veil.layer?.backgroundColor = NSColor.white.withAlphaComponent(whiteness).cgColor
+        veil.autoresizingMask = [.width, .height]
+        view.addSubview(veil)
+        return view
+    }
+
+    func updateNSView(_ view: NSVisualEffectView, context: Context) {
+        view.subviews.first?.frame = view.bounds
+    }
+}
+
 /// Regroupe des éléments en verre proches (`GlassEffectContainer`) pour qu'ils se rendent
 /// ensemble et se fondent les uns dans les autres. Repli : le contenu tel quel.
 struct GlassGroup<Content: View>: View {
